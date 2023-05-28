@@ -1,0 +1,225 @@
+create database ProyectofinalFarhat;
+use proyectofinalFarhat;
+
+CREATE TABLE PEDIDOS ( 
+id_pedido	INT NOT NULL,
+id_sucursal INT NOT NULL,
+id_cliente	INT NOT NULL, 
+fecha DATE,
+fecha_de_envio	DATE,
+PRIMARY KEY (id_pedido)) ;
+
+
+CREATE TABLE PRODUCTOS ( 
+id_producto	INT NOT NULL,
+nombre_producto VARCHAR (60),
+categoria_producto VARCHAR (60), 
+precio float,
+PRIMARY KEY (id_producto));
+
+CREATE TABLE TABLA_INTERMEDIA_prod_ped
+ ( 
+id_ped_prod	INT NOT NULL,
+id_pedido INT NOT NULL,
+id_producto INT NOT NULL,
+PRIMARY KEY (id_producto)
+);
+
+CREATE TABLE SUCURSAL ( 
+id_sucursal	INT NOT NULL,
+nombre_sucursal VARCHAR (60),
+gerente_sucursal VARCHAR (60), 
+PRIMARY KEY (id_sucursal));
+
+CREATE TABLE CLIENTES ( 
+id_cliente	INT NOT NULL,
+nombre_cliente VARCHAR (60),
+mail VARCHAR (60), 
+telefono INT,
+direccion VARCHAR (60),
+CP INT,
+fecha_de_afiliacion DATE,
+PRIMARY KEY (id_cliente));
+
+
+INSERT INTO pedidos (id_pedido, id_sucursal, id_cliente, fecha, fecha_de_envio)
+VALUES
+  (1, 1, 1, '2023-05-01', '2023-05-10'),
+  (2, 2, 2, '2023-05-02', '2023-05-11'),
+  (3, 1, 3, '2023-05-03', '2023-05-12'),
+  (4, 3, 4, '2023-05-04', '2023-05-13'),
+  (5, 2, 5, '2023-05-05', '2023-05-14'),
+  (6, 3, 6, '2023-05-06', '2023-05-15'),
+  (7, 1, 7, '2023-05-07', '2023-05-16'),
+  (8, 2, 8, '2023-05-08', '2023-05-17'),
+  (9, 3, 9, '2023-05-09', '2023-05-18'),
+  (10, 1, 10, '2023-05-10', '2023-05-19');
+  
+ INSERT INTO productos (id_producto, nombre_producto, categoria_producto, precio)
+VALUES
+  (1, 'Producto 1', 'Categoría 1', 10.99),
+  (2, 'Producto 2', 'Categoría 2', 19.99),
+  (3, 'Producto 3', 'Categoría 1', 15.99),
+  (4, 'Producto 4', 'Categoría 3', 8.99),
+  (5, 'Producto 5', 'Categoría 2', 12.99),
+  (6, 'Producto 6', 'Categoría 3', 9.99),
+  (7, 'Producto 7', 'Categoría 1', 14.99),
+  (8, 'Producto 8', 'Categoría 2', 11.99),
+  (9, 'Producto 9', 'Categoría 3', 7.99),
+  (10, 'Producto 10', 'Categoría 1', 16.99);
+  
+  INSERT INTO sucursal
+VALUES
+  (1, 'Buenos Aires', 'Carlos Gómez'),
+  (2, 'Córdoba', 'María López'),
+  (3, 'Rosario', 'Juan Martínez'),
+  (4, 'Mendoza', 'Laura Rodríguez'),
+  (5, 'San Miguel de Tucumán', 'Diego González'),
+  (6, 'La Plata', 'Ana Fernández'),
+  (7, 'Mar del Plata', 'Luis Morales'),
+  (8, 'Salta', 'Carolina Silva'),
+  (9, 'Santa Fe', 'Andrés Pérez'),
+  (10, 'San Juan', 'Sofía Torres');
+  
+  
+INSERT INTO clientes (id_cliente, nombre_cliente, mail, telefono, direccion, CP, fecha_de_afiliacion)
+VALUES
+  (1, 'Juan Pérez', 'juan@example.com', 1234567890, 'Calle A, N° 123', 1234, '2023-01-01'),
+  (2, 'María López', 'maria@example.com', 876543210, 'Calle B, N° 456', 5678, '2023-02-01'),
+  (3, 'Carlos Gómez', 'carlos@example.com', 1112223333, 'Calle C, N° 789', 9012, '2023-03-01'),
+  (4, 'Laura Rodríguez', 'laura@example.com', 445556666, 'Calle D, N° 1011', 1314, '2023-04-01'),
+  (5, 'Ana Fernández', 'ana@example.com', 778889999, 'Calle E, N° 1213', 1516, '2023-05-01'),
+  (6, 'Pedro García', 'pedro@example.com', 223334444, 'Calle F, N° 1415', 1718, '2023-06-01'),
+  (7, 'Sofía Torres', 'sofia@example.com', 556667777, 'Calle G, N° 1617', 1920, '2023-07-01'),
+  (8, 'Luis Morales', 'luis@example.com', 889990000, 'Calle H, N° 1819', 2122, '2023-08-01'),
+  (9, 'Carolina Silva', 'carolina@example.com', 334445555, 'Calle I, N° 2021', 2324, '2023-09-01'),
+  (10, 'Martín Castro', 'martin@example.com', 667778888, 'Calle J, N° 2223', 2526, '2023-10-01');
+  
+INSERT INTO TABLA_INTERMEDIA_prod_ped (id_ped_prod, id_pedido, id_producto)
+VALUES
+  (1, 2, 3),
+  (2, 1, 2),
+  (3, 4, 6),
+  (4, 3, 4),
+  (5, 6, 5),
+  (6, 5, 7),
+  (7, 8, 10),
+  (8, 9, 8),
+  (9, 7, 9),
+  (10, 10, 1);  
+  
+  create view Clientes_view as 
+SELECT * FROM clientes;
+
+create view pedidos_view as 
+SELECT * FROM pedidos;
+
+create view productos_view as 
+SELECT * FROM productos;
+
+create view sucursal_view as 
+SELECT * FROM sucursal;
+
+create view intermedia_view as 
+SELECT * FROM tabla_intermedia_prod_ped;
+
+delimiter //
+create function num_pedido_fecha (param1 INT, param2 date)
+RETURNS varchar (60) 
+DETERMINISTIC
+BEGIN 
+declare resultado varchar (60) ;
+SET resultado = (concat ("pedido n° ", param1, " realizado en ",param2));
+RETURN resultado;
+END
+//
+ 
+delimiter //
+create function num_pedido_nombre_sucursal (param1 INT, param2 char(60))
+RETURNS varchar (60) 
+DETERMINISTIC
+BEGIN 
+declare resultado2 varchar (60) ;
+SET resultado2 = (concat ("pedido n° ", param1, " sucursal ",param2));
+RETURN resultado2;
+END
+//
+
+delimiter // 
+create procedure ordenar_pedidos ()
+begin 
+select * from pedidos 
+order by fecha;
+end 
+//
+delimiter ;
+
+delimiter $$ 
+create procedure eliminar_pedidos (in parametro1 int )
+begin 
+delete from pedidos 
+where id_pedido = parametro1;
+end 
+$$
+delimiter  ;
+
+#CREO LOS DOS TRIGGERS PARA PEDIDOS - UNO DE BACKUP, CONTROL Y OTRO DE AUDITORIA PARA VER QUIEN HIZO EL REGISTRO - CON SUS RESPECTIVAS TABLAS 
+
+create table tabla_auditoria_pedidos (
+id_pedido int,
+fecha date, 
+user varchar (100),
+date date,
+time time) ;
+
+create trigger trigger_auditoria 
+after insert on pedidos
+for each row
+insert into tabla_auditoria_pedidos (id_pedido,fecha, user, date, time)
+values (new.id_pedido, new.fecha, user(), curdate(), curtime())
+;
+
+create table tabla_back_up_pedidos (
+id_pedido int,
+id_cliente int, 
+user varchar (100),
+date date,
+time time) ;
+
+create trigger back_up_pedidos
+before delete on pedidos
+for each row
+insert into tabla_back_up_pedidos (id_pedido, id_cliente, user, date, time)
+values (old.id_pedido, old.id_cliente, user(), curdate(), curtime())
+;
+
+#CREO LOS DOS TRIGGERS PARA CLIENTES - UNO DE BACKUP, CONTROL Y OTRO DE AUDITORIA PARA VER QUIEN HIZO EL REGISTRO - CON SUS RESPECTIVAS TABLAS 
+
+create table tabla_back_up_clientes (
+id_cliente int,
+nombre_cliente varchar (60), 
+user varchar (100),
+date date,
+time time) ;
+
+create trigger back_up_clientes
+before delete on clientes
+for each row
+insert into tabla_back_up_clientes (id_cliente, nombre_cliente, user, date, time)
+values (old.id_cliente, old.nombre_cliente, user(), curdate(), curtime())
+;
+
+
+create table tabla_auditoria_clientes(
+id_cliente int,
+nombre_cliente varchar (60), 
+user varchar (100),
+date date,
+time time);
+
+create trigger trigger_auditoria_clientes
+after insert on clientes
+for each row
+insert into tabla_auditoria_clientes (id_cliente, nombre_cliente, user, date, time)
+values (new.id_cliente, new.nombre_cliente, user(), curdate(), curtime())
+;
